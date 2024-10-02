@@ -1,27 +1,10 @@
-import { Router, Request, Response } from "express"
+import { Router } from "express"
 const router: Router = Router()
 
-import Task from "../../../models/task.model"
+import * as controller from "../controllers/task.controller" // * là lấy tất cả 
 
-router.get("/", async (req: Request, res: Response): Promise<void> => {
-    const tasks = await Task.find({
-        deleted: "false"
-    })
+router.get("/", controller.index)
 
-    console.log(tasks)
-
-    res.json(tasks)
-})
-
-router.get("/detail/:id", async (req: Request, res: Response): Promise<void> => {
-    const id: string = req.params.id
-
-    const task = await Task.findOne({
-        _id: id,
-        deleted: "false"
-    })
-
-    res.json(task)
-})
+router.get("/detail/:id", controller.detail)
 
 export const taskRoutes: Router  = router
