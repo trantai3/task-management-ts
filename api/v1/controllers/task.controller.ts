@@ -88,7 +88,7 @@ export const changeMulti = async (req: Request, res: Response): Promise<void> =>
         const ids: string[] = req.body.ids
         const key: string = req.body.key
         const value: string = req.body.value
-        
+
         switch (key) {
             case "status":
                 await Task.updateMany({
@@ -124,6 +124,24 @@ export const changeMulti = async (req: Request, res: Response): Promise<void> =>
         res.json({
             code: 400,
             message: "Không tồn tại!"
+        })
+    }
+}
+
+export const create = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const task = new Task(req.body)
+        const data = await task.save()
+
+        res.json({
+            code: 200,
+            message: "Tạo thành công!",
+            data: data
+        })
+    } catch (error) {
+        res.json({
+            code: 400,
+            message: "Lỗi!"
         })
     }
 }
