@@ -82,3 +82,48 @@ export const changeStatus = async (req: Request, res: Response): Promise<void> =
         })
     }
 }
+
+export const changeMulti = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const ids: string[] = req.body.ids
+        const key: string = req.body.key
+        const value: string = req.body.value
+        
+        switch (key) {
+            case "status":
+                await Task.updateMany({
+                    _id: { $in: ids }
+                }, {
+                    status: value
+                })
+                res.json({
+                    code: 200,
+                    message: "Cập nhật trạng thái thành công!"
+                })
+                break
+            case "delete":
+                await Task.updateMany({
+                    _id: { $in: ids }
+                }, {
+                    deleted: true,
+                    deletedAt: new Date()
+                })
+                res.json({
+                    code: 200,
+                    message: "Xóa thành công!"
+                })
+                break
+            default:
+                res.json({
+                    code: 400,
+                    message: "Không tồn tại!"
+                })
+                break
+        }
+    } catch (error) {
+        res.json({
+            code: 400,
+            message: "Không tồn tại!"
+        })
+    }
+}
