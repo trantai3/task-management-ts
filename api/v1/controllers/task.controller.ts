@@ -2,6 +2,7 @@ import { Request, Response } from "express"
 import Task from "../models/task.model"
 import paginationHelper from "../../../helpers/pagination"
 import searchHelper from "../../../helpers/search"
+import exp from "constants"
 
 export const index = async (req: Request, res: Response): Promise<void> => {
     // Find
@@ -137,6 +138,24 @@ export const create = async (req: Request, res: Response): Promise<void> => {
             code: 200,
             message: "Tạo thành công!",
             data: data
+        })
+    } catch (error) {
+        res.json({
+            code: 400,
+            message: "Lỗi!"
+        })
+    }
+}
+
+export const edit = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const id = req.params.id
+
+        await Task.updateOne({ _id: id }, req.body)
+
+        res.json({
+            code: 200,
+            message: "Cập nhật thành công!"
         })
     } catch (error) {
         res.json({
