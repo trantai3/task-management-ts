@@ -86,12 +86,16 @@ export const changeStatus = async (req: Request, res: Response): Promise<void> =
 
 export const changeMulti = async (req: Request, res: Response): Promise<void> => {
     try {
+        enum Key {
+            STATUS = "status",
+            DELETE = "delete"
+        }
         const ids: string[] = req.body.ids
         const key: string = req.body.key
         const value: string = req.body.value
 
         switch (key) {
-            case "status":
+            case Key.STATUS:
                 await Task.updateMany({
                     _id: { $in: ids }
                 }, {
@@ -102,7 +106,7 @@ export const changeMulti = async (req: Request, res: Response): Promise<void> =>
                     message: "Cập nhật trạng thái thành công!"
                 })
                 break
-            case "delete":
+            case Key.DELETE:
                 await Task.updateMany({
                     _id: { $in: ids }
                 }, {
@@ -156,6 +160,27 @@ export const edit = async (req: Request, res: Response): Promise<void> => {
         res.json({
             code: 200,
             message: "Cập nhật thành công!"
+        })
+    } catch (error) {
+        res.json({
+            code: 400,
+            message: "Lỗi!"
+        })
+    }
+}
+
+export const deleteTask = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const id = req.params.id
+
+        await Task.updateOne({ _id: id }, {
+            deleted: true,
+            deletedAt: new Date()
+        })
+
+        res.json({
+            code: 200,
+            message: "Xóa thành công!"
         })
     } catch (error) {
         res.json({
